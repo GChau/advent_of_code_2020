@@ -7,6 +7,25 @@
 
 const int SUM = 2020;
 
+bool calculate_match(
+    std::vector<bool>& entries_seen,
+    const int entry
+) {
+    // Check entries
+    entries_seen[entry - 1] = true;
+    const int compliment = SUM - entry;
+
+    // If the compliment is in the vector, return true
+    // -1  for offset
+    if (entries_seen[compliment - 1]) {
+        std::cout << "Pair: " << entry << ", " << compliment << std::endl;
+        std::cout << "Multiplied: " << entry * compliment << std::endl;
+        return true;
+    }
+
+    return false;
+}
+
 int main(int argc, char const *argv[])
 {
     if (argc < 1) {
@@ -40,15 +59,7 @@ int main(int argc, char const *argv[])
                 continue;
             }
 
-            // Check entries
-            entries_seen[entry - 1] = true;
-            const int compliment = SUM - entry;
-
-            // If the compliment is in the vector, return true
-            // -1  for offset
-            if (entries_seen[compliment - 1]) {
-                std::cout << "Pair: " << entry << ", " << compliment << std::endl;
-                std::cout << "Multiplied: " << entry * compliment << std::endl;
+            if (calculate_match(entries_seen, entry)) {
                 return 0;
             }
 
