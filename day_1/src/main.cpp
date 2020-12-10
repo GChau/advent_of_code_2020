@@ -1,27 +1,56 @@
+// STL includes
+#include <algorithm>
 #include <fstream>
 #include <iostream>
+#include <set>
 #include <sstream>
 #include <stdexcept>
 #include <string>
+#include <tuple>
+#include <unordered_map>
 #include <vector>
+
+// Custom includes
+#include "sum_components.hpp"
 
 const int SUM = 2020;
 
 bool calculate_match(
-    std::vector<bool>& entries_seen,
-    const int entry
+    std::set<unsigned int>& seen_expense,
+    std::unordered_map<unsigned int, sum_components>& expenses_atlas,
+    const unsigned int expense
 ) {
-    // Check entries
-    entries_seen[entry - 1] = true;
-    const int compliment = SUM - entry;
+    // Check if compliment exists
+    const unsigned int compliment = SUM - expense;
 
-    // If the compliment is in the vector, return true
-    // -1  for offset
-    if (entries_seen[compliment - 1]) {
-        std::cout << "Pair: " << entry << ", " << compliment << std::endl;
-        std::cout << "Multiplied: " << entry * compliment << std::endl;
-        return true;
+    auto comp_it = expenses_atlas.find(compliment);
+    if (comp_it != expenses_atlas.end()) {
+        // If compliment exists, check if sum component permutation exists
+        if (comp_it->second.get_permutations().size()) {
+            auto sum_component = comp_it->second.get_permutations().back();
+            std::cout << "Triple: " << expense << ", " << std::get<0>(sum_component) << ", " << std::get<1>(sum_component) << " (" << compliment << ")" << std::endl;
+            std::cout << "Multiplied: " << expense * std::get<0>(sum_component) * std::get<1>(sum_component) << std::endl;
+            return true;
+        }
     }
+
+    for (auto it = seen_expense.cbegin(); it != seen_expense.cend(); it++) {
+        const unsigned int new_permutation = expense + *it;
+        if (new_permutation < 2020) {
+            if (expenses_atlas.find(new_permutation) == expenses_atlas.cend()) {
+                expenses_atlas[new_permutation] = sum_components();
+            }
+            std::cout << "New permutation: " << new_permutation << ": " << expense << " + " << *it << std::endl;
+            expenses_atlas[new_permutation].insert_permutation(std::make_tuple(expense, *it));
+        }
+    }
+
+    // Insert entry into the set
+    if (expenses_atlas.find(expense) == expenses_atlas.cend()) {
+        expenses_atlas[expense] = sum_components();
+    }
+
+    seen_expense.insert(expense);
 
     return false;
 }
@@ -32,8 +61,9 @@ int main(int argc, char const *argv[])
         throw std::invalid_argument("An input file was not passed in!");
     }
 
-    // Keep track of our entries seen here and init to false
-    std::vector<bool> entries_seen(SUM, false);
+    // Keep track of our expenses seen here and init to 0
+    std::set <unsigned int> seen_expenses;
+    std::unordered_map<unsigned int, sum_components> expenses_atlas;
     unsigned int line_count = 1;
 
     try {
@@ -59,7 +89,7 @@ int main(int argc, char const *argv[])
                 continue;
             }
 
-            if (calculate_match(entries_seen, entry)) {
+            if (calculate_match(seen_expenses, expenses_atlas, entry)) {
                 return 0;
             }
 
@@ -70,7 +100,7 @@ int main(int argc, char const *argv[])
         std::cout << "Exception thrown: " << e.what() << std::endl;
     }
 
-    std::cout << "Did not find a sum pair that totalled to " << SUM << "!" << std::endl;
+    std::cout << "Did not find a sum triple that totalled to " << SUM << "!" << std::endl;
 
     return 0;
 }

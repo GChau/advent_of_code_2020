@@ -34,6 +34,16 @@
         "xstddef": "cpp",
         "xstring": "cpp",
         "xtr1common": "cpp",
-        "xutility": "cpp"
+        "xutility": "cpp",
+        "set": "cpp",
+        "sstream": "cpp",
+        "string": "cpp",
+        "tuple": "cpp",
+        "vector": "cpp",
+        "xtree": "cpp",
+        "algorithm": "cpp",
+        "unordered_map": "cpp",
+        "list": "cpp",
+        "xhash": "cpp"
     }
 }
