@@ -1,14 +1,9 @@
 // STL includes
-#include <algorithm>
 #include <fstream>
 #include <iostream>
-#include <set>
-#include <sstream>
 #include <stdexcept>
 #include <string>
-#include <tuple>
 #include <type_traits>
-#include <unordered_map>
 #include <vector>
 
 template <typename T = std::string>
@@ -77,7 +72,7 @@ bool validate_password_part_2(
     const char* char_ptr = character.c_str();
 
     // If only one matches (XOR), return true.
-    if (*char_ptr == password[index_1 - 1]^ *char_ptr == password[index_2 - 1]) {
+    if ((*char_ptr == password[index_1 - 1]) ^ (*char_ptr == password[index_2 - 1])) {
         return true;
     }
 
