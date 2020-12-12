@@ -13,7 +13,7 @@ COPY /input /input
 WORKDIR /usr/src/
 
 # Use Clang to compile the main.cpp source file
-RUN clang++ -o main main.cpp
+RUN clang++ -o main main.cpp -std=c++17
 
 # Run the output program from the previous step
 CMD ["./main", "/input/input.txt"]

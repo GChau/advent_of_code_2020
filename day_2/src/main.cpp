@@ -7,21 +7,21 @@
 #include <vector>
 
 template <typename T = std::string>
-typename T convertType(
+T convertType(
     const std::string& arg
 ) {
-    if constexpr (std::is_same_v<typename T, int>)
+    if constexpr (std::is_same_v<T, int>)
         return std::stoi(arg);
     else
         return arg;
 }
 
 template <typename T>
-typename T parseString(
+T parseString(
     std::string& line,
     const std::string& delimiter
 ) {
-    typename T parsed_entity = convertType<typename T>(line.substr(0, line.find(delimiter)));
+    T parsed_entity = convertType<T>(line.substr(0, line.find(delimiter)));
     line.erase(0, line.find(delimiter) + delimiter.length());
     return parsed_entity;
 }
