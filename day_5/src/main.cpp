@@ -1,5 +1,6 @@
 // STL includes
 #include <assert.h>  
+#include <chrono>
 #include <fstream>
 #include <iostream>
 #include <regex>
@@ -9,6 +10,7 @@
 
 int main(int argc, char const *argv[])
 {
+    auto t1 = std::chrono::high_resolution_clock::now();
     // Check if an input file argument was passed in
     if (argc < 2) {
         throw std::invalid_argument("An input file was not passed in!");
@@ -38,7 +40,7 @@ int main(int argc, char const *argv[])
                     row_range.first = split + 1;
                 }
                 else {
-                    throw std::exception("Unexpected character during row binary partition!");
+                    throw std::runtime_error("Unexpected character during row binary partition!");
                 }
             }
 
@@ -55,7 +57,7 @@ int main(int argc, char const *argv[])
                     col_range.first = split + 1;
                 }
                 else {
-                    throw std::exception("Unexpected character during col binary partition!");
+                    throw std::runtime_error("Unexpected character during col binary partition!");
                 }
             }
 
@@ -83,6 +85,10 @@ int main(int argc, char const *argv[])
             break;
         }
     }
+
+    auto t2 = std::chrono::high_resolution_clock::now();
+    auto duration = std::chrono::duration_cast<std::chrono::microseconds>(t2 - t1).count();
+    std::cout << "Duration: " << duration << " microseconds" << std::endl;
 
     return 0;
 }
