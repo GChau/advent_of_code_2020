@@ -3,12 +3,9 @@
 #include <fstream>
 #include <iostream>
 #include <regex>
-#include <set>
 #include <stdexcept>
 #include <string>
-#include <map>
 #include <vector>
-
 
 int main(int argc, char const *argv[])
 {
@@ -26,7 +23,6 @@ int main(int argc, char const *argv[])
         // Stream input file
         std::ifstream input_file(argv[1]);
         std::string line;
-        size_t line_count = 0;
         while (std::getline(input_file, line)) {
             // For Linux compatiblity
             if (line.length() != 0 && line.at(line.length() - 1) == '\r') {
@@ -69,8 +65,6 @@ int main(int argc, char const *argv[])
             const unsigned int seat_id = row_range.first * 8 + col_range.first;
             seat_ids.push_back(seat_id);
             highest_id = seat_id > highest_id ? seat_id : highest_id;
-            line_count++;
-
         }
     }
     catch (const std::exception& e) {
@@ -80,17 +74,15 @@ int main(int argc, char const *argv[])
         std::cout << "Argh!" << std::endl;
     }
 
-    std::sort(seat_ids.begin(), seat_ids.end());
+    std::cout << "Part 1: Highest Seat ID: " << highest_id << std::endl;
 
-    unsigned int my_seat = 0;
+    std::sort(seat_ids.begin(), seat_ids.end());
     for (int i = 0; i < seat_ids.size() - 2; i++) {
         if ((seat_ids[i] + 1) != seat_ids[i + 1]) {
-            my_seat = (seat_ids[i] + 1);
+            std::cout << "Part 2: My Seat ID: " << (seat_ids[i] + 1) << std::endl;
+            break;
         }
     }
-
-    std::cout << "Part 1: Highest Seat ID: " << highest_id << std::endl;
-    std::cout << "Part 2: My Seat ID: " << my_seat << std::endl;
 
     return 0;
 }
